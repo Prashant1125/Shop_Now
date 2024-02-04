@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping/customui/product_card.dart';
@@ -50,10 +51,15 @@ class _AddProductState extends State<AddProduct> {
           style: TextStyle(color: Colors.white),
         ),
         // Add home icon
-        leading: const Icon(
-          Icons.home,
-          size: 25,
-          color: Colors.white,
+        leading: Switch(
+          value: AdaptiveTheme.of(context).mode.isDark,
+          onChanged: (value) {
+            if (value) {
+              AdaptiveTheme.of(context).setDark();
+            } else {
+              AdaptiveTheme.of(context).setLight();
+            }
+          },
         ),
         actions: [
           //Add shopping cart button
