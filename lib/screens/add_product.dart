@@ -51,74 +51,138 @@ class _AddProductState extends State<AddProduct> {
           style: TextStyle(color: Colors.white),
         ),
         // Add home icon
-        leading: Switch(
-          value: AdaptiveTheme.of(context).mode.isDark,
-          onChanged: (value) {
-            if (value) {
-              AdaptiveTheme.of(context).setDark();
-            } else {
-              AdaptiveTheme.of(context).setLight();
-            }
-          },
+        leading: Tooltip(
+          message: 'Theme',
+          child: Transform.scale(
+            scale: 0.9,
+            child: Switch(
+              value: AdaptiveTheme.of(context).mode.isDark,
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              activeThumbImage: const AssetImage('assets/icon/sun.png'),
+              inactiveThumbImage: const AssetImage('assets/icon/moon.png'),
+              onChanged: (value) {
+                if (value) {
+                  AdaptiveTheme.of(context).setDark();
+                } else {
+                  AdaptiveTheme.of(context).setLight();
+                }
+              },
+            ),
+          ),
         ),
         actions: [
           //Add shopping cart button
-          IconButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .push(CupertinoPageRoute(
-                        builder: (_) => CartScreen(
-                              productlist: productlist
-                                  .where((e) => e.isAdded == true)
-                                  .toList(),
-                            )))
-                    .then((value) {
-                  setState(() {
-                    productlist;
-                  });
-                });
-              },
-              tooltip: 'Shopping Cart',
-              icon: const Icon(
-                Icons.shopping_cart,
-                size: 25,
-                color: Colors.white,
-              ))
+          Align(
+            alignment: Alignment.center,
+            child: Stack(
+              children: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .push(CupertinoPageRoute(
+                              builder: (_) => CartScreen(
+                                    productlist: productlist
+                                        .where((e) => e.isAdded == true)
+                                        .toList(),
+                                  )))
+                          .then((value) {
+                        setState(() {
+                          productlist;
+                        });
+                      });
+                    },
+                    tooltip: 'Shopping Cart',
+                    icon: const Icon(
+                      Icons.shopping_cart,
+                      size: 25,
+                      color: Colors.white,
+                    )),
+                Positioned(
+                  left: mq.width * .040,
+                  bottom: mq.height * .01,
+                  child: MaterialButton(
+                    onPressed: () {},
+                    color: Colors.red.shade600,
+                    minWidth: 0,
+                    padding: const EdgeInsets.all(8),
+                    shape: const CircleBorder(),
+                    child: Text(
+                      '${productlist.where((e) => e.isAdded).length}',
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         ],
       ),
 
       // open cart button at bottom
-      floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: Colors.blue.shade300,
-          onPressed: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(
-                    builder: (_) => CartScreen(
-                          productlist: productlist
-                              .where((e) => e.isAdded == true)
-                              .toList(),
-                        )))
-                .then((value) {
-              setState(() {
-                productlist;
-              });
-            });
-          },
-          label: const Text(
-            'Cart',
-            style: TextStyle(fontSize: 15, color: Colors.white),
-          ),
-          icon: const Icon(
-            Icons.shopping_cart,
-            size: 25,
-            color: Colors.white,
-          )),
+      floatingActionButton: SizedBox(
+        width: mq.width * .5,
+        height: mq.height * .1,
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: FloatingActionButton.extended(
+                  backgroundColor: Colors.blue.shade300,
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(
+                            builder: (_) => CartScreen(
+                                  productlist: productlist
+                                      .where((e) => e.isAdded == true)
+                                      .toList(),
+                                )))
+                        .then((value) {
+                      setState(() {
+                        productlist;
+                      });
+                    });
+                  },
+                  label: const Text(
+                    'Cart',
+                    style: TextStyle(fontSize: 15, color: Colors.white),
+                  ),
+                  icon: const Icon(
+                    Icons.shopping_cart,
+                    size: 25,
+                    color: Colors.white,
+                  )),
+            ),
+            Positioned(
+              right: mq.width * .07,
+              bottom: mq.height * .045,
+              child: MaterialButton(
+                onPressed: () {},
+                color: Colors.white.withOpacity(0.4),
+                minWidth: 0,
+                padding: const EdgeInsets.all(10),
+                shape: const CircleBorder(),
+                child: Text(
+                  '${productlist.where((e) => e.isAdded).length}',
+                  style: const TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
 
       // for showing product list
       body: ListView.builder(
         itemBuilder: (ctx, i) {
           return ProductCard(
+            onTap: () {
+              setState(() {
+                productlist;
+              });
+            },
             product: productlist[i],
           );
         },

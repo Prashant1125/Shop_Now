@@ -36,6 +36,7 @@ class CartScreen extends StatelessWidget {
         itemBuilder: (ctx, i) {
           return ProductCard(
             product: productlist[i],
+            onTap: () {},
           );
         },
       ),

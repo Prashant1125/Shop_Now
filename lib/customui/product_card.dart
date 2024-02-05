@@ -5,7 +5,8 @@ import '../screens/add_product.dart';
 
 class ProductCard extends StatefulWidget {
   final Product product;
-  const ProductCard({super.key, required this.product});
+  final VoidCallback onTap;
+  const ProductCard({super.key, required this.product, required this.onTap});
 
   @override
   State<ProductCard> createState() => _ProductCardState();
@@ -16,9 +17,7 @@ class _ProductCardState extends State<ProductCard> {
   Widget build(BuildContext context) {
     return Card(
       elevation: 5,
-      color: widget.product.isAdded
-          ? const Color.fromARGB(255, 215, 255, 216)
-          : null,
+      color: widget.product.isAdded ? Colors.green.withOpacity(0.8) : null,
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: mq.height * .010),
 
       // creating rounded creation
@@ -46,6 +45,7 @@ class _ProductCardState extends State<ProductCard> {
             // icon to confirm for Product add in cart
             IconButton(
                 onPressed: () {
+                  widget.onTap();
                   setState(() {
                     widget.product.isAdded = false;
                   });
@@ -69,11 +69,13 @@ class _ProductCardState extends State<ProductCard> {
                 style: ElevatedButton.styleFrom(
                     elevation: 5, shape: const StadiumBorder()),
                 onPressed: () {
+                  widget.onTap();
+
                   setState(() {
                     widget.product.isAdded = true;
                   });
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      backgroundColor: Colors.green.withOpacity(0.9),
+                      backgroundColor: Colors.green.withOpacity(0.8),
                       behavior: SnackBarBehavior.floating,
                       content: const Text('Item Added Successfully')));
                 },
